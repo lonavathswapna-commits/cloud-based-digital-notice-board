@@ -1,0 +1,421 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Register - Digital Notice Board</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            color: #17365d;
+            background: linear-gradient(135deg, #f3f8ff, #ffffff, #edf5ff);
+        }
+
+        .topbar {
+            height: 65px;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            background: linear-gradient(110deg, #0874e8, #0861d5);
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .register-container {
+            min-height: calc(100vh - 65px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .register-card {
+            width: 100%;
+            max-width: 460px;
+            padding: 30px 35px;
+            background: white;
+            border: 1px solid #dce8f5;
+            border-radius: 12px;
+            box-shadow: 0 10px 35px rgba(27, 83, 145, 0.10);
+        }
+
+        .logo-circle {
+            width: 68px;
+            height: 68px;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            color: white;
+            background: linear-gradient(135deg, #2682f5, #075acb);
+            font-size: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #17365d;
+            font-size: 26px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #69809e;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #203c5e;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 7px;
+        }
+
+        .input-box {
+            width: 100%;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 13px;
+            background: white;
+            border: 1px solid #d7e4f2;
+            border-radius: 6px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .input-box:focus-within {
+            border-color: #1976ed;
+            box-shadow: 0 0 0 3px rgba(25, 118, 237, 0.10);
+        }
+
+        .input-box span {
+            color: #5380b4;
+            font-size: 15px;
+        }
+
+        .input-box input {
+            flex: 1;
+            width: 0;
+            height: 100%;
+            border: none;
+            outline: none;
+            background: transparent;
+            color: #17365d;
+            font-size: 13px;
+        }
+
+        .input-box input::placeholder {
+            color: #9aabc0;
+        }
+
+        .register-button {
+            width: 100%;
+            height: 46px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 8px;
+            border: none;
+            border-radius: 6px;
+            color: white;
+            background: linear-gradient(110deg, #0878ef, #0860d6);
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 94, 210, 0.15);
+            transition: opacity 0.2s, transform 0.2s;
+        }
+
+        .register-button:hover {
+            opacity: 0.92;
+            transform: translateY(-1px);
+        }
+
+        .message {
+            margin-top: 13px;
+            font-size: 13px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .login-text {
+            text-align: center;
+            color: #6a7f99;
+            font-size: 13px;
+            margin-top: 22px;
+            line-height: 1.7;
+        }
+
+        .login-text a {
+            color: #0869df;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .login-text a:hover {
+            text-decoration: underline;
+        }
+
+        .footer-text {
+            margin-top: 22px;
+            text-align: center;
+            color: #8092a8;
+            font-size: 11px;
+        }
+
+        @media (max-width: 500px) {
+            .topbar {
+                height: 58px;
+                padding: 0 14px;
+            }
+
+            .brand {
+                gap: 10px;
+                font-size: 15px;
+            }
+
+            .register-container {
+                min-height: calc(100vh - 58px);
+                padding: 25px 14px;
+            }
+
+            .register-card {
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+   
+
+    <main class="register-container">
+
+        <section class="register-card">
+
+            <div class="logo-circle">👤</div>
+
+            <h1>Create Account</h1>
+
+            <p class="subtitle">
+                Register to access your Digital Notice Board
+            </p>
+
+            <form id="registerForm">
+
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+
+                    <div class="input-box">
+                        <span>👤</span>
+
+                        <input
+                            type="text"
+                            id="fullname"
+                            placeholder="Enter your full name"
+                            autocomplete="name"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+
+                    <div class="input-box">
+                        <span>✉</span>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email address"
+                            autocomplete="email"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+
+                    <div class="input-box">
+                        <span>☎</span>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            placeholder="Enter your phone number"
+                            pattern="[0-9]{10}"
+                            maxlength="10"
+                            minlength="10"
+                            title="Enter a valid 10-digit phone number"
+                            autocomplete="tel"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <div class="input-box">
+                        <span>🔒</span>
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Create a password"
+                            minlength="8"
+                            autocomplete="new-password"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+
+                    <div class="input-box">
+                        <span>🔒</span>
+
+                        <input
+                            type="password"
+                            id="confirmPassword"
+                            placeholder="Confirm your password"
+                            minlength="8"
+                            autocomplete="new-password"
+                            required>
+                    </div>
+                </div>
+
+                <button type="submit" class="register-button">
+                    Create Account →
+                </button>
+
+                <p id="message" class="message" aria-live="polite"></p>
+
+            </form>
+
+            <div class="login-text">
+                Already have an account?
+                <a href="login.html">Login</a>
+            </div>
+
+        </section>
+
+        <p class="footer-text">
+            © 2026 Cloud-Based Digital Notice Board. All rights reserved.
+        </p>
+
+    </main>
+
+   <script>
+    const registerForm = document.getElementById("registerForm");
+    const message = document.getElementById("message");
+
+    registerForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const name = document.getElementById("fullname").value.trim();
+        const email = document.getElementById("email").value.trim().toLowerCase();
+        const phone = document.getElementById("phone").value.trim();
+        const password = document.getElementById("password").value;
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+        message.textContent = "";
+        message.style.color = "red";
+
+        if (!name) {
+            message.textContent = "Please enter your full name.";
+            return;
+        }
+
+        if (!/^[0-9]{10}$/.test(phone)) {
+            message.textContent =
+                "Please enter a valid 10-digit phone number.";
+            return;
+        }
+
+        if (password.length < 8) {
+            message.textContent =
+                "Password must contain at least 8 characters.";
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            message.textContent = "Passwords do not match!";
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    password: password
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                message.textContent = result.message ||
+                    "Registration failed.";
+                return;
+            }
+
+            message.textContent = result.message;
+            message.style.color = "green";
+            message.style.fontWeight = "bold";
+
+            registerForm.reset();
+
+        } catch (error) {
+            message.textContent =
+                "Unable to connect to the server. Please try again.";
+        }
+    });
+</script>
+
+
+</body>
+</html>
+```

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Digital Notice Board</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f9fc;
+            color: #12345a;
+        }
+
+        /* Header */
+        .topbar {
+            height: 47px;
+            background: #0873e8;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        /* Main Layout */
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 47px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 153px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, #18344e, #102940);
+            padding-top: 7px;
+        }
+
+        .nav-link {
+            height: 38px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            margin: 0 5px 2px;
+            color: white;
+            text-decoration: none;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+
+        .nav-link.active {
+            background: #0873ed;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-link:hover {
+            background: #1263c7;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            padding: 14px;
+        }
+
+        /* Page Heading */
+        .page-heading {
+            min-height: 73px;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 14px;
+            background: #eaf4ff;
+            border: 1px solid #d2e5fc;
+            border-radius: 6px;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 8px;
+            font-size: 17px;
+            color: #12345a;
+        }
+
+        .page-heading p {
+            margin: 0;
+            font-size: 11px;
+            color: #52739b;
+        }
+
+        /* Profile Card */
+        .profile-card {
+            display: flex;
+            gap: 12px;
+            background: white;
+            border: 1px solid #f2f3f5;
+            border-radius: 6px;
+            padding: 22px 12px 14px;
+            min-height: 228px;
+        }
+
+        .profile-right {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .profile-right h2 {
+            margin: -7px 0 12px;
+            font-size: 14px;
+            color: #12345a;
+        }
+
+        /* Profile Table */
+        .profile-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #e1ebf6;
+            border-radius: 5px;
+            overflow: hidden;
+            font-size: 12px;
+        }
+
+        .profile-table th,
+        .profile-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #e5edf6;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-table th {
+            width: 36%;
+            background: #fafafb;
+            font-weight: bold;
+        }
+
+        .profile-table td {
+            background: white;
+            color: #35577f;
+        }
+
+        .profile-table tr:nth-child(even) th,
+        .profile-table tr:nth-child(even) td {
+            background: #f0f7ff;
+        }
+
+        .profile-table tr:last-child th,
+        .profile-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Input Fields */
+        .profile-table input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid transparent;
+            border-radius: 4px;
+            background: transparent;
+            color: #12345a;
+            font-size: 12px;
+            outline: none;
+        }
+
+        .profile-table input:disabled {
+            background: transparent;
+            border-color: transparent;
+            color: #35577f;
+            cursor: default;
+            opacity: 1;
+            -webkit-text-fill-color: #35577f;
+        }
+
+        .profile-table input:enabled {
+            background: white;
+            border: 1px solid #0873ed;
+            cursor: text;
+        }
+
+        .profile-table input:focus {
+            border-color: #0873ed;
+            box-shadow: 0 0 3px rgba(8, 115, 237, 0.3);
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .save-btn {
+            padding: 9px 18px;
+            background: #0873ed;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .save-btn:hover {
+            background: #075fc5;
+        }
+
+        .cancel-btn {
+            background: #6c757d;
+        }
+
+        .cancel-btn:hover {
+            background: #565e64;
+        }
+
+        /* Messages */
+        .success-message {
+            display: none;
+            margin-top: 12px;
+            color: #16803c;
+            font-size: 12px;
+        }
+
+        .error-message {
+            display: none;
+            margin-top: 12px;
+            color: #d93025;
+            font-size: 12px;
+        }
+
+        /* Information Box */
+        .information-box {
+            display: flex;
+            align-items: center;
+            min-height: 45px;
+            margin-top: 13px;
+            padding: 10px 16px;
+            background: #eaf4ff;
+            border: 1px solid #d2e5fc;
+            border-radius: 5px;
+        }
+
+        .information-box p {
+            margin: 0;
+            font-size: 11px;
+            color: #52739b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 650px) {
+            .topbar {
+                padding: 0 10px;
+            }
+
+            .brand {
+                font-size: 12px;
+            }
+
+            .user-info {
+                font-size: 10px;
+            }
+
+            .sidebar {
+                width: 125px;
+            }
+
+            .nav-link {
+                padding: 0 8px;
+            }
+
+            .main-content {
+                padding: 10px 8px;
+            }
+
+            .profile-card {
+                padding: 15px 8px;
+            }
+
+            .profile-table th,
+            .profile-table td {
+                padding: 7px 5px;
+            }
+
+            .profile-table input {
+                padding: 7px 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Without Icons -->
+    <header class="topbar">
+
+        <div class="brand">
+            <span>Digital Notice Board</span>
+        </div>
+
+        <div class="user-info">
+            <span id="welcomeName">Welcome, Student</span>
+        </div>
+
+    </header>
+
+    <div class="layout">
+
+        <!-- Sidebar Without Icons -->
+        <aside class="sidebar">
+
+            <a href="index.html" class="nav-link">
+                <span>Home</span>
+            </a>
+
+            <a href="my-notices.html" class="nav-link">
+                <span>My Notices</span>
+            </a>
+
+            <a href="add-notice.html" class="nav-link">
+                <span>Add Notice</span>
+            </a>
+
+            <a href="profile.html" class="nav-link active">
+                <span>Profile</span>
+            </a>
+
+            <a href="logout.html" class="nav-link">
+                <span>Logout</span>
+            </a>
+
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Page Heading -->
+            <section class="page-heading">
+
+                <div>
+                    <h1>My Profile</h1>
+                    <p>View and update your profile information.</p>
+                </div>
+
+            </section>
+
+            <!-- Profile Information -->
+            <section class="profile-card">
+
+                <div class="profile-right">
+
+                    <h2>Student Details</h2>
+
+                    <form id="profileForm">
+
+                        <table class="profile-table">
+
+                            <tbody>
+
+                                <tr>
+                                    <th>Name</th>
+                                    <td>
+                                        <input
+                                            type="text"
+                                            id="profileName"
+                                            placeholder="Enter your name"
+                                            disabled
+                                            required>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Email</th>
+                                    <td>
+                                        <input
+                                            type="email"
+                                            id="profileEmail"
+                                            placeholder="Enter your email"
+                                            disabled
+                                            required>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>Phone Number</th>
+                                    <td>
+                                        <input
+                                            type="tel"
+                                            id="profilePhone"
+                                            placeholder="Enter your phone number"
+                                            pattern="[0-9]{10}"
+                                            maxlength="10"
+                                            inputmode="numeric"
+                                            disabled
+                                            required>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                        <!-- Update, Save and Cancel Buttons -->
+                        <div class="button-group">
+
+                            <button
+                                type="button"
+                                id="updateBtn"
+                                class="save-btn">
+                                Update Profile
+                            </button>
+
+                            <button
+                                type="submit"
+                                id="saveBtn"
+                                class="save-btn"
+                                style="display: none;">
+                                Save Changes
+                            </button>
+
+                            <button
+                                type="button"
+                                id="cancelBtn"
+                                class="save-btn cancel-btn"
+                                style="display: none;">
+                                Cancel
+                            </button>
+
+                        </div>
+
+                        <p id="successMessage" class="success-message">
+                            Profile updated successfully!
+                        </p>
+
+                        <p id="errorMessage" class="error-message"></p>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+            <!-- Information Box -->
+            <section class="information-box">
+
+                <p>
+                    Click Update Profile to edit your name, email,
+                    and phone number. Click Save Changes to save
+                    your updated information.
+                </p>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- JavaScript: load and update profile using Flask + SQLite -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById("profileForm");
+            const nameInput = document.getElementById("profileName");
+            const emailInput = document.getElementById("profileEmail");
+            const phoneInput = document.getElementById("profilePhone");
+            const welcomeName = document.getElementById("welcomeName");
+            const updateBtn = document.getElementById("updateBtn");
+            const saveBtn = document.getElementById("saveBtn");
+            const cancelBtn = document.getElementById("cancelBtn");
+            const successMessage = document.getElementById("successMessage");
+            const errorMessage = document.getElementById("errorMessage");
+
+            let originalDetails = { name: "", email: "", phone: "" };
+
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = "block";
+                successMessage.style.display = "none";
+            }
+
+            function hideMessages() {
+                successMessage.style.display = "none";
+                errorMessage.style.display = "none";
+            }
+
+            function setEditMode(editing) {
+                nameInput.disabled = !editing;
+                emailInput.disabled = !editing;
+                phoneInput.disabled = !editing;
+                updateBtn.style.display = editing ? "none" : "inline-block";
+                saveBtn.style.display = editing ? "inline-block" : "none";
+                cancelBtn.style.display = editing ? "inline-block" : "none";
+                hideMessages();
+            }
+
+            function saveCurrentDetails() {
+                originalDetails = {
+                    name: nameInput.value,
+                    email: emailInput.value,
+                    phone: phoneInput.value
+                };
+            }
+
+            async function loadProfile() {
+                hideMessages();
+                try {
+                    const response = await fetch("/api/profile", {
+                        method: "GET",
+                        credentials: "same-origin",
+                        headers: { "Accept": "application/json" }
+                    });
+                    const data = await response.json();
+
+                    if (response.status === 401) {
+                        window.location.href = "/login.html";
+                        return;
+                    }
+                    if (!response.ok) {
+                        showError(data.message || "Unable to load profile.");
+                        return;
+                    }
+
+                    nameInput.value = data.name || "";
+                    emailInput.value = data.email || "";
+                    phoneInput.value = data.phone || "";
+                    welcomeName.textContent = "Welcome, " + (data.name || "Student");
+                    saveCurrentDetails();
+                    setEditMode(false);
+                } catch (error) {
+                    showError("Unable to connect to the server. Make sure Flask is running.");
+                }
+            }
+
+            updateBtn.addEventListener("click", function () {
+                saveCurrentDetails();
+                setEditMode(true);
+                nameInput.focus();
+            });
+
+            form.addEventListener("submit", async function (event) {
+                event.preventDefault();
+                hideMessages();
+
+                const name = nameInput.value.trim();
+                const email = emailInput.value.trim();
+                const phone = phoneInput.value.trim();
+
+                if (!name || !email || !phone) {
+                    showError("Please fill in all three fields.");
+                    return;
+                }
+                if (!emailInput.checkValidity()) {
+                    showError("Please enter a valid email address.");
+                    return;
+                }
+                if (!/^[0-9]{10}$/.test(phone)) {
+                    showError("Please enter a valid 10-digit phone number.");
+                    return;
+                }
+
+                saveBtn.disabled = true;
+                saveBtn.textContent = "Saving...";
+                try {
+                    const response = await fetch("/api/profile", {
+                        method: "PUT",
+                        credentials: "same-origin",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+                        body: JSON.stringify({ name: name, email: email, phone: phone })
+                    });
+                    const data = await response.json();
+
+                    if (response.status === 401) {
+                        window.location.href = "/login.html";
+                        return;
+                    }
+                    if (!response.ok) {
+                        showError(data.message || "Unable to save profile changes.");
+                        return;
+                    }
+
+                    nameInput.value = data.name || name;
+                    emailInput.value = data.email || email;
+                    phoneInput.value = data.phone || phone;
+                    welcomeName.textContent = "Welcome, " + (data.name || name);
+                    saveCurrentDetails();
+                    setEditMode(false);
+                    successMessage.textContent = "Profile updated successfully!";
+                    successMessage.style.display = "block";
+                } catch (error) {
+                    showError("Unable to connect to the server. Please try again.");
+                } finally {
+                    saveBtn.disabled = false;
+                    saveBtn.textContent = "Save Changes";
+                }
+            });
+
+            cancelBtn.addEventListener("click", function () {
+                nameInput.value = originalDetails.name;
+                emailInput.value = originalDetails.email;
+                phoneInput.value = originalDetails.phone;
+                setEditMode(false);
+            });
+
+            loadProfile();
+        });
+    </script>
+
+</body>
+
+</html>
+

@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Notice - Digital Notice Board</title>
+
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f7f9fc;
+            color: #12345a;
+        }
+
+        /* Header */
+        .topbar {
+            height: 47px;
+            background: #0873e8;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+        }
+
+        .brand { font-size: 17px; font-weight: bold; }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            font-size: 11px;
+        }
+
+        /* Main Layout */
+        .layout {
+            display: flex;
+            min-height: calc(100vh - 47px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 153px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, #18344e, #102940);
+            padding-top: 7px;
+        }
+
+        .nav-link {
+            height: 38px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            margin: 0 5px 2px;
+            color: #ffffff;
+            text-decoration: none;
+            font-size: 12px;
+            border-radius: 5px;
+        }
+
+        .nav-link.active {
+            background: #0873ed;
+            color: white;
+            font-weight: bold;
+        }
+
+        .nav-link:hover { background: #1263c7; }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            min-width: 0;
+            padding: 14px;
+        }
+
+        /* Page Heading */
+        .page-heading {
+            min-height: 73px;
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            margin-bottom: 14px;
+            background: #eaf4ff;
+            border: 1px solid #d2e5fc;
+            border-radius: 6px;
+        }
+
+        .page-heading h1 {
+            margin: 0 0 8px;
+            font-size: 17px;
+            color: #12345a;
+        }
+
+        .page-heading p {
+            margin: 0;
+            font-size: 11px;
+            color: #52739b;
+        }
+
+        /* Notice Form */
+        .form-card {
+            background: white;
+            border: 1px solid #dce7f3;
+            border-radius: 7px;
+            padding: 12px 14px;
+        }
+
+        .form-group { margin-bottom: 18px; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #12345a;
+        }
+
+        .form-group label span { color: #f04452; }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #d4e3f5;
+            border-radius: 6px;
+            background: white;
+            color: #24476e;
+            font-family: Arial, sans-serif;
+            font-size: 12px;
+        }
+
+        .form-group input,
+        .form-group select {
+            height: 31px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+        }
+
+        .form-group textarea {
+            height: 78px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #0873ed;
+            box-shadow: 0 0 4px #0873ed30;
+        }
+
+        /* Form Buttons */
+        .form-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 9px;
+            margin-top: -2px;
+        }
+
+        .cancel-btn,
+        .submit-btn {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .cancel-btn { background: #7b93ac; }
+        .submit-btn { background: #0873ed; }
+        .cancel-btn:hover { background: #617b96; }
+        .submit-btn:hover { background: #075fc5; }
+
+        .submit-btn:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        .success-message {
+            display: none;
+            color: #16834b;
+            font-size: 13px;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        .error-message {
+            display: none;
+            color: #c62828;
+            font-size: 13px;
+            margin-top: 15px;
+            line-height: 1.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 650px) {
+            .topbar { padding: 0 10px; }
+            .brand { font-size: 12px; }
+            .user-info { font-size: 10px; }
+            .sidebar { width: 125px; }
+            .nav-link { padding: 0 8px; }
+            .main-content { padding: 10px 8px; }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="topbar">
+        <div class="brand">Digital Notice Board</div>
+        <div class="user-info">
+            <span id="welcomeName">Welcome, Student</span>
+        </div>
+    </header>
+
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <nav>
+                <a href="index.html" class="nav-link"><span>Home</span></a>
+                <a href="my-notices.html" class="nav-link"><span>My Notices</span></a>
+                <a href="add-notice.html" class="nav-link active"><span>Add Notice</span></a>
+                <a href="profile.html" class="nav-link"><span>Profile</span></a>
+                <a href="logout.html" class="nav-link"><span>Logout</span></a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <section class="page-heading">
+                <div>
+                    <h1>Add New Notice</h1>
+                    <p>Fill in the details below to post a new notice.</p>
+                </div>
+            </section>
+
+            <!-- Notice Form -->
+            <section class="form-card">
+                <form id="noticeForm">
+                    <div class="form-group">
+                        <label for="title">Notice Title <span>*</span></label>
+                        <input
+                            type="text"
+                            id="title"
+                            name="title"
+                            placeholder="Enter notice title"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="category">Category <span>*</span></label>
+                        <select id="category" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="Academic">Academic</option>
+                            <option value="Event">Event</option>
+                            <option value="Important">Important</option>
+                            <option value="Placement">Placement</option>
+                            <option value="General">General</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Description <span>*</span></label>
+                        <textarea
+                            id="description"
+                            name="description"
+                            placeholder="Enter notice description..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="date">Date <span>*</span></label>
+                        <input type="date" id="date" name="date" required>
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="reset" class="cancel-btn">Cancel</button>
+                        <button type="submit" class="submit-btn">Submit Notice</button>
+                    </div>
+
+                    <p id="successMessage" class="success-message" role="status" aria-live="polite">
+                        Notice submitted successfully!
+                    </p>
+                    <p id="errorMessage" class="error-message" role="alert" aria-live="assertive"></p>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const noticeForm = document.getElementById("noticeForm");
+        const welcomeName = document.getElementById("welcomeName");
+        const successMessage = document.getElementById("successMessage");
+        const errorMessage = document.getElementById("errorMessage");
+        const dateInput = document.getElementById("date");
+        const submitButton = noticeForm.querySelector('button[type="submit"]');
+
+        function getTodayDate() {
+            const today = new Date();
+            const year = today.getFullYear();
+            const month = String(today.getMonth() + 1).padStart(2, "0");
+            const day = String(today.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        }
+
+        function setMinimumDate() {
+            dateInput.min = getTodayDate();
+        }
+
+        function showError(message) {
+            successMessage.style.display = "none";
+            errorMessage.textContent = message;
+            errorMessage.style.display = "block";
+        }
+
+        function showSuccess(message) {
+            errorMessage.style.display = "none";
+            successMessage.textContent = message;
+            successMessage.style.display = "block";
+        }
+
+        setMinimumDate();
+
+        // Submit the notice to the Flask API.
+        noticeForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+            console.log("Submit Notice button clicked.");
+
+            successMessage.style.display = "none";
+            errorMessage.style.display = "none";
+
+            const notice = {
+                title: document.getElementById("title").value.trim(),
+                category: document.getElementById("category").value,
+                description: document.getElementById("description").value.trim(),
+                date: dateInput.value
+            };
+
+            if (!notice.title || !notice.category || !notice.description || !notice.date) {
+                showError("Please fill in all required fields.");
+                return;
+            }
+
+            if (notice.date < getTodayDate()) {
+                showError("Past dates are not allowed. Please select today or a future date.");
+                dateInput.value = "";
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.textContent = "Submitting...";
+
+            try {
+                const response = await fetch("/api/notices", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "same-origin",
+                    body: JSON.stringify(notice)
+                });
+
+                // Read the response as text first so an HTML/server error is also diagnosable.
+                const responseText = await response.text();
+                let result;
+
+                try {
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error("Non-JSON response from /api/notices:", responseText);
+                    throw new Error(
+                        "The server did not return JSON (HTTP " + response.status +
+                        "). Check the Flask terminal and confirm app.py has the /api/notices route."
+                    );
+                }
+
+                console.log("POST /api/notices response:", response.status, result);
+
+                if (response.status === 401) {
+                    showError(result.message || "Your session has expired. Please log in again.");
+                    return;
+                }
+
+                if (!response.ok || result.success !== true) {
+                    showError(result.message || "The notice could not be saved. HTTP status: " + response.status);
+                    return;
+                }
+
+                showSuccess(result.message || "Notice submitted successfully!");
+                noticeForm.reset();
+                setMinimumDate();
+            } catch (error) {
+                console.error("Notice submission error:", error);
+                showError(
+                    error.message ||
+                    "Unable to connect to the server. Make sure Flask is running and open this page through http://127.0.0.1:5000/add-notice.html."
+                );
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = "Submit Notice";
+            }
+        });
+
+        // Hide messages when the Cancel/reset button is clicked.
+        noticeForm.addEventListener("reset", function () {
+            successMessage.style.display = "none";
+            errorMessage.style.display = "none";
+            setTimeout(setMinimumDate, 0);
+        });
+
+        // Get the logged-in user's name. This is separate from form submission.
+        fetch("/api/me", {
+            method: "GET",
+            credentials: "same-origin"
+        })
+        .then(async function (response) {
+            let result;
+            try {
+                result = await response.json();
+            } catch (error) {
+                throw new Error("The server returned an invalid response while loading user details.");
+            }
+
+            if (response.ok && result.success && result.user) {
+                welcomeName.textContent =
+                    "Welcome, " + (result.user.name || result.user.email || "Student");
+            } else if (response.status === 401) {
+                welcomeName.textContent = "Welcome, Student";
+            } else {
+                console.warn("Unable to load user details:", result.message || response.status);
+            }
+        })
+        .catch(function (error) {
+            console.error("User loading error:", error);
+        });
+    });
+    </script>
+</body>
+</html>

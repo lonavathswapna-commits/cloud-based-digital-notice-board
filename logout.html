@@ -1,0 +1,391 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout - Cloud-Based Digital Notice Board</title>
+</head>
+<style>
+    
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #ffffff;
+    color: #17365d;
+    font-size: 12px;
+}
+
+/* Top Navigation Bar */
+.topbar {
+    height: 47px;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px 0 21px;
+    color: #ffffff;
+    background: linear-gradient(110deg, #0874e8, #0861d5);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 17px;
+    font-weight: bold;
+}
+
+.brand i {
+    font-size: 25px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 10px;
+}
+
+.cloud-icon {
+    font-size: 19px;
+    margin-right: 7px;
+}
+
+.user-icon {
+    font-size: 20px;
+}
+
+.user-info .fa-angle-down {
+    font-size: 10px;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 47px;
+    left: 0;
+    bottom: 0;
+    width: 153px;
+    background: linear-gradient(180deg, #142c43, #102840);
+    padding-top: 8px;
+    overflow-y: auto;
+}
+
+.sidebar nav {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.nav-item {
+    height: 37px;
+    margin: 0 3px;
+    padding: 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 5px;
+    transition: background 0.2s ease;
+}
+
+.nav-item i {
+    width: 16px;
+    text-align: center;
+    font-size: 16px;
+}
+
+.nav-item:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.nav-item.active {
+    background: linear-gradient(110deg, #0878ef, #0860d6);
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    font-weight: bold;
+}
+
+/* Main Content */
+.main-content {
+    margin-left: 153px;
+    padding: 62px 16px 24px;
+    min-height: 100vh;
+    background: #ffffff;
+}
+
+/* Logout Card */
+.logout-card {
+    width: 100%;
+    min-height: 386px;
+    padding: 37px 18px 31px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #ffffff;
+    border: 1px solid #dce8f4;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(30, 80, 120, 0.025);
+}
+
+/* Circular Logout Icon */
+.logout-icon {
+    width: 110px;
+    height: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e4f2ff, #d7eaff);
+    border: 1px solid #d5e7f9;
+    color: #0871e4;
+    margin-bottom: 15px;
+}
+
+.logout-icon i {
+    font-size: 44px;
+}
+
+/* Logout Heading */
+.logout-card h1 {
+    color: #102e55;
+    font-size: 21px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+/* Thank You Text */
+.thank-you {
+    color: #547193;
+    font-size: 12px;
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 19px;
+}
+
+/* Login Again Button */
+.login-button {
+    min-width: 130px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 18px;
+    color: #ffffff;
+    text-decoration: none;
+    background: linear-gradient(110deg, #176af0, #0860df);
+    border-radius: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(0, 80, 180, 0.12);
+    transition: opacity 0.2s ease;
+}
+
+.login-button:hover {
+    opacity: 0.88;
+}
+
+/* Information Banner */
+.info-message {
+    width: 100%;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 12px 19px;
+    margin-top: 26px;
+    background: linear-gradient(110deg, #e8f3ff, #f0f7ff);
+    border: 1px solid #d5e5f5;
+    border-radius: 6px;
+}
+
+.info-message i {
+    color: #0871e4;
+    font-size: 21px;
+    flex-shrink: 0;
+}
+
+.info-message p {
+    color: #547193;
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+/* Responsive Design */
+@media (max-width: 700px) {
+    .brand {
+        gap: 8px;
+        font-size: 13px;
+    }
+
+    .brand i {
+        font-size: 19px;
+    }
+
+    .user-info {
+        gap: 6px;
+    }
+
+    .user-info .cloud-icon {
+        display: none;
+    }
+
+    .sidebar {
+        width: 55px;
+    }
+
+    .nav-item {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .nav-item span {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 55px;
+        padding: 60px 9px 20px;
+    }
+
+    .logout-card {
+        min-height: 360px;
+        padding: 35px 12px 22px;
+    }
+
+    .logout-icon {
+        width: 90px;
+        height: 90px;
+    }
+
+    .logout-icon i {
+        font-size: 36px;
+    }
+
+    .logout-card h1 {
+        font-size: 18px;
+    }
+
+    .info-message {
+        gap: 10px;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 420px) {
+    .brand {
+        font-size: 10px;
+    }
+
+    .user-info span {
+        display: none;
+    }
+
+    .logout-card h1 {
+        font-size: 16px;
+    }
+
+    .thank-you {
+        font-size: 11px;
+    }
+}
+
+</style>
+<body>
+
+    <!-- Top Navigation Bar -->
+    <header class="topbar">
+        <div class="brand">
+            <i class="fa-solid fa-bullhorn"></i>
+            <span>Digital Notice Board</span>
+        </div>
+
+        <div class="user-info">
+            <i class="fa-solid fa-cloud cloud-icon"></i>
+            <span>Welcome, Student</span>
+            <i class="fa-solid fa-circle-user user-icon"></i>
+            <i class="fa-solid fa-angle-down"></i>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <nav>
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-house"></i>
+                <span>Home</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-file-lines"></i>
+                <span>My Notices</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-plus"></i>
+                <span>Add Notice</span>
+            </a>
+
+            <a href="#" class="nav-item">
+                <i class="fa-solid fa-user"></i>
+                <span>Profile</span>
+            </a>
+
+            <a href="#" class="nav-item active">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <section class="logout-card">
+
+            <!-- Logout Icon -->
+            <div class="logout-icon">
+                <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+
+            <!-- Logout Message -->
+            <h1>You have been logged out!</h1>
+
+            <p class="thank-you">
+                Thank you for using the Cloud-Based Digital Notice Board.
+            </p>
+
+            <!-- Login Button -->
+            <a href="login.html" class="login-button">
+                Login Again
+            </a>
+
+            <!-- Information Banner -->
+            <div class="info-message">
+                <i class="fa-solid fa-circle-info"></i>
+                <p>
+                    Stay connected for the latest notices and important updates.
+                </p>
+            </div>
+
+        </section>
+
+    </main>
+
+</body>
+</html>

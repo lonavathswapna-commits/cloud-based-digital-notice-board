@@ -1,0 +1,990 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cloud-Based Digital Notice Board</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f8fafc;
+            color: #172f50;
+            font-size: 14px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* TOP HEADER */
+        .topbar {
+            height: 74px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 31px;
+            color: #fff;
+            background: linear-gradient(110deg, #2169d7, #1764d5);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 23px;
+            font-size: 25px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 19px;
+            font-size: 16px;
+            white-space: nowrap;
+        }
+
+        /* LEFT SIDEBAR */
+        .sidebar {
+            position: fixed;
+            top: 74px;
+            left: 0;
+            bottom: 0;
+            width: 252px;
+            background: linear-gradient(180deg, #203750, #1d3550);
+            padding-top: 13px;
+            overflow-y: auto;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .nav-item {
+            height: 58px;
+            margin: 0 4px;
+            padding: 0 19px;
+            display: flex;
+            align-items: center;
+            gap: 0;
+            color: #edf4ff;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: 400;
+            transition: background 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.10);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(110deg, #2678ed, #1769dc);
+            color: #fff;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+        }
+
+        /* MAIN PAGE LAYOUT */
+        .main-content {
+            margin-left: 252px;
+            padding: 94px 16px 20px 20px;
+            display: grid;
+            grid-template-columns: minmax(0, 2.15fr) minmax(0, 1fr);
+            gap: 32px;
+            min-height: 100vh;
+            align-items: start;
+        }
+
+        .notices-column,
+        .right-column {
+            min-width: 0;
+        }
+
+        .notices-column,
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 13px;
+        }
+
+        .right-column {
+            gap: 14px;
+        }
+
+        /* WELCOME BANNER */
+        .welcome-banner {
+            min-height: 157px;
+            padding: 22px;
+            display: flex;
+            align-items: center;
+            gap: 23px;
+            background: linear-gradient(110deg, #e7f2ff, #eaf4ff);
+            border: 1px solid #d7e8fb;
+            border-radius: 6px;
+        }
+
+        .welcome-text {
+            min-width: 0;
+        }
+
+        .welcome-text h1 {
+            margin-bottom: 12px;
+            color: #152d4e;
+            font-size: 29px;
+            line-height: 1.2;
+            font-weight: 700;
+        }
+
+        .welcome-text p {
+            color: #54749e;
+            font-size: 18px;
+            line-height: 1.65;
+        }
+
+        /* LATEST NOTICES HEADING */
+        .section-heading {
+            min-height: 51px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .section-heading h2 {
+            color: #172f50;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        /* NOTICE CARDS */
+        .notice-card {
+            position: relative;
+            width: 100%;
+            min-height: 140px;
+            padding: 18px 19px 65px 20px;
+            display: flex;
+            align-items: flex-start;
+            border: 1px solid;
+            border-radius: 7px;
+            overflow-wrap: anywhere;
+        }
+
+        .academic-card {
+            background: linear-gradient(110deg, #edf5ff, #eff7ff);
+            border-color: #cfe2ff;
+        }
+
+        .event-card {
+            background: linear-gradient(110deg, #edf8f3, #f0f9f5);
+            border-color: #d4ece2;
+        }
+
+        .important-card {
+            background: linear-gradient(110deg, #fff0f1, #fff2f3);
+            border-color: #f7dadd;
+        }
+
+        .placement-card {
+            background: linear-gradient(110deg, #f3efff, #f5f1ff);
+            border-color: #e2d8ff;
+        }
+
+        .general-card {
+            background: linear-gradient(110deg, #fff8e8, #fffaf0);
+            border-color: #f2e3bd;
+        }
+
+        /* NOTICE CONTENT */
+        .notice-content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            margin-bottom: 9px;
+            color: #fff;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        .academic-badge {
+            background: linear-gradient(110deg, #347df3, #1765de);
+        }
+
+        .event-badge {
+            background: linear-gradient(110deg, #2fa16d, #198654);
+        }
+
+        .important-badge {
+            background: linear-gradient(110deg, #fa7479, #e84b51);
+        }
+
+        .placement-badge {
+            background: linear-gradient(110deg, #a078f4, #8656e8);
+        }
+
+        .general-badge {
+            background: linear-gradient(110deg, #e5a52d, #c68112);
+        }
+
+        .notice-content h3 {
+            color: #173252;
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.4;
+            margin-bottom: 7px;
+            overflow-wrap: anywhere;
+        }
+
+        .notice-date {
+            margin-top: 0;
+            color: #52749d;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .notice-description {
+            display: none;
+            margin-top: 12px;
+            color: #304f77;
+            font-size: 15px;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere;
+        }
+
+        .notice-card.expanded .notice-description {
+            display: block;
+        }
+
+        .notice-author {
+            display: none;
+            margin-top: 9px;
+            color: #52749d;
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .notice-card.expanded .notice-author {
+            display: block;
+        }
+
+        /* READ MORE BUTTON */
+        .read-more {
+            position: absolute;
+            right: 19px;
+            bottom: 14px;
+            min-height: 34px;
+            padding: 0 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0964df;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid #1670f4;
+            border-radius: 7px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .read-more:hover {
+            color: #fff;
+            background: #1769df;
+        }
+
+        /* EMPTY / ERROR MESSAGE */
+        .empty-notices {
+            padding: 22px;
+            background: #fff;
+            border: 1px solid #dce7f3;
+            border-radius: 7px;
+            color: #52749d;
+            line-height: 1.6;
+        }
+
+        /* RIGHT-SIDE PANELS */
+        .panel {
+            width: 100%;
+            padding: 20px 19px;
+            background: #fff;
+            border: 1px solid #e1e8f0;
+            border-radius: 7px;
+            box-shadow: 0 1px 3px rgba(25, 65, 105, 0.025);
+        }
+
+        .panel-heading {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 22px;
+            color: #172f50;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* CALENDAR */
+        .calendar-panel {
+            min-height: 502px;
+            padding: 20px 16px 23px;
+        }
+
+        .calendar-panel .panel-heading {
+            margin-bottom: 25px;
+            padding-left: 4px;
+        }
+
+        .calendar-navigation {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 0 3px 18px;
+        }
+
+        .calendar-navigation h3 {
+            color: #172f50;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .calendar-navigation button {
+            width: 29px;
+            height: 29px;
+            border: none;
+            background: transparent;
+            color: #17365d;
+            font-size: 15px;
+        }
+
+        .calendar-navigation button:hover {
+            color: #1769d9;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(0, 1fr));
+            grid-auto-rows: 38px;
+            align-items: center;
+            justify-items: center;
+            text-align: center;
+        }
+
+        .weekday {
+            width: 100%;
+            color: #4c5058;
+            font-size: 14px;
+        }
+
+        .day {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #4c5058;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .day:not(.empty):hover {
+            background: #e5efff;
+            color: #075fd0;
+        }
+
+        .day.selected {
+            color: #fff;
+            background: linear-gradient(135deg, #287af0, #1767dc);
+        }
+
+        .calendar-info {
+            min-height: 106px;
+            margin-top: 26px;
+            padding: 15px 12px;
+            display: flex;
+            align-items: flex-start;
+            background: linear-gradient(110deg, #eaf4ff, #edf6ff);
+            border-radius: 7px;
+        }
+
+        .calendar-info p {
+            color: #075fd0;
+            font-size: 15px;
+            line-height: 1.55;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: minmax(0, 1.7fr) minmax(290px, 1fr);
+                gap: 20px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+
+            .welcome-text h1 {
+                font-size: 24px;
+            }
+
+            .welcome-text p {
+                font-size: 15px;
+            }
+
+            .notice-content h3 {
+                font-size: 15px;
+            }
+
+            .notice-date {
+                font-size: 12px;
+            }
+
+            .notice-description {
+                font-size: 13px;
+            }
+
+            .read-more {
+                right: 12px;
+                bottom: 12px;
+                font-size: 12px;
+                min-height: 30px;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .brand {
+                font-size: 19px;
+            }
+
+            .user-info {
+                gap: 10px;
+                font-size: 12px;
+            }
+
+            .sidebar {
+                width: 190px;
+            }
+
+            .nav-item {
+                font-size: 15px;
+            }
+
+            .main-content {
+                margin-left: 190px;
+                grid-template-columns: minmax(0, 1fr);
+                padding-top: 92px;
+            }
+
+            .right-column {
+                display: grid;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                align-items: start;
+                gap: 15px;
+            }
+
+            .calendar-panel {
+                min-height: auto;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .topbar {
+                height: 62px;
+                padding: 0 12px;
+            }
+
+            .brand {
+                font-size: 13px;
+            }
+
+            .user-info {
+                gap: 7px;
+                font-size: 10px;
+            }
+
+            .sidebar {
+                top: 62px;
+                width: 110px;
+                padding-top: 8px;
+            }
+
+            .nav-item {
+                height: 48px;
+                justify-content: flex-start;
+                padding: 0 8px;
+                margin: 0 4px;
+                font-size: 12px;
+            }
+
+            .main-content {
+                margin-left: 110px;
+                padding: 78px 10px 20px;
+                gap: 18px;
+            }
+
+            .welcome-banner {
+                min-height: auto;
+                padding: 17px 13px;
+            }
+
+            .welcome-text h1 {
+                font-size: 19px;
+                margin-bottom: 8px;
+            }
+
+            .welcome-text p {
+                font-size: 12px;
+                line-height: 1.5;
+            }
+
+            .section-heading {
+                min-height: 40px;
+            }
+
+            .section-heading h2 {
+                font-size: 18px;
+            }
+
+            .notice-card {
+                min-height: 0;
+                padding: 13px 11px 58px;
+            }
+
+            .badge {
+                font-size: 10px;
+                padding: 4px 8px;
+                margin-bottom: 6px;
+            }
+
+            .notice-content h3 {
+                font-size: 13px;
+            }
+
+            .notice-date {
+                font-size: 10px;
+            }
+
+            .notice-description {
+                font-size: 11px;
+            }
+
+            .read-more {
+                right: 11px;
+                bottom: 11px;
+                min-height: 30px;
+                font-size: 11px;
+            }
+
+            .right-column {
+                display: flex;
+            }
+
+            .panel {
+                padding: 15px 12px;
+            }
+
+            .panel-heading {
+                font-size: 17px;
+            }
+
+            .calendar-grid {
+                grid-auto-rows: 35px;
+            }
+
+            .calendar-info p {
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP HEADER -->
+    <header class="topbar">
+        <div class="brand">
+            <span>Digital Notice Board</span>
+        </div>
+
+        <div class="user-info">
+            <span id="welcomeName">Welcome, Student</span>
+        </div>
+    </header>
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+        <nav>
+            <a href="index.html" class="nav-item active">
+                <span>Home</span>
+            </a>
+
+            <a href="my-notices.html" class="nav-item">
+                <span>My Notices</span>
+            </a>
+
+            <a href="add-notice.html" class="nav-item">
+                <span>Add Notice</span>
+            </a>
+
+            <a href="profile.html" class="nav-item">
+                <span>Profile</span>
+            </a>
+
+            <a href="logout.html" class="nav-item">
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- MAIN PAGE -->
+    <main class="main-content">
+
+        <!-- LEFT COLUMN -->
+        <section class="notices-column">
+
+            <!-- WELCOME BANNER -->
+            <div class="welcome-banner">
+                <div class="welcome-text">
+                    <h1>Welcome to Digital Notice Board</h1>
+
+                    <p>
+                        Stay updated with the latest announcements, events and
+                        important information from your college.
+                    </p>
+                </div>
+            </div>
+
+            <!-- LATEST NOTICES -->
+            <div class="section-heading">
+                <h2>Latest Notices</h2>
+            </div>
+
+            <!-- Notices are loaded from app.py -->
+            <div id="dynamicNotices" aria-live="polite">
+                <div class="empty-notices">Loading notices...</div>
+            </div>
+
+        </section>
+
+        <!-- RIGHT COLUMN -->
+        <section class="right-column">
+
+            <!-- CALENDAR -->
+            <section class="panel calendar-panel">
+
+                <h2 class="panel-heading">
+                    <span>Calendar</span>
+                </h2>
+
+                <div class="calendar-navigation">
+                    <button type="button" id="previousMonth"
+                            aria-label="Previous month">&lt;</button>
+
+                    <h3 id="calendarMonth"></h3>
+
+                    <button type="button" id="nextMonth"
+                            aria-label="Next month">&gt;</button>
+                </div>
+
+                <div class="calendar-grid" id="calendarGrid"></div>
+
+                <div class="calendar-info">
+                    <p>
+                        Stay updated with the latest notices and never miss an
+                        important announcement!
+                    </p>
+                </div>
+
+            </section>
+
+        </section>
+    </main>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const container = document.getElementById("dynamicNotices");
+        const welcomeName = document.getElementById("welcomeName");
+
+        /*
+         * LOAD LOGGED-IN USER
+         */
+        async function loadUser() {
+            try {
+                const response = await fetch("/api/me", {
+                    method: "GET",
+                    credentials: "same-origin"
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success && result.user) {
+                    welcomeName.textContent =
+                        "Welcome, " + (result.user.name || "Student");
+                } else if (response.status === 401) {
+                    welcomeName.textContent = "Welcome, Student";
+                }
+            } catch (error) {
+                console.error("Unable to load user:", error);
+            }
+        }
+
+        /*
+         * LOAD NOTICES FROM FLASK
+         */
+        async function loadNotices() {
+            container.replaceChildren();
+
+            const loadingMessage = document.createElement("div");
+            loadingMessage.className = "empty-notices";
+            loadingMessage.textContent = "Loading notices...";
+            container.appendChild(loadingMessage);
+
+            try {
+                const response = await fetch("/api/notices", {
+                    method: "GET",
+                    credentials: "same-origin"
+                });
+
+                const result = await response.json();
+
+                if (!response.ok || result.success !== true) {
+                    container.replaceChildren();
+
+                    const errorMessage = document.createElement("div");
+                    errorMessage.className = "empty-notices";
+                    errorMessage.textContent =
+                        result.message || "Unable to load notices.";
+
+                    container.appendChild(errorMessage);
+                    return;
+                }
+
+                const notices = result.notices || [];
+
+                container.replaceChildren();
+
+                if (notices.length === 0) {
+                    const emptyMessage = document.createElement("div");
+                    emptyMessage.className = "empty-notices";
+                    emptyMessage.textContent =
+                        "No notices are available yet. Add a notice to get started.";
+
+                    container.appendChild(emptyMessage);
+                    return;
+                }
+
+                notices.forEach(function (notice) {
+
+                    const card = document.createElement("article");
+
+                    const category = notice.category || "General";
+
+                    const cardClasses = {
+                        Academic: "academic-card",
+                        Event: "event-card",
+                        Important: "important-card",
+                        Placement: "placement-card",
+                        General: "general-card"
+                    };
+
+                    card.className =
+                        "notice-card " +
+                        (cardClasses[category] || "general-card");
+
+                    const content = document.createElement("div");
+                    content.className = "notice-content";
+
+                    const badge = document.createElement("span");
+                    badge.className = "badge";
+
+                    const badgeClasses = {
+                        Academic: "academic-badge",
+                        Event: "event-badge",
+                        Important: "important-badge",
+                        Placement: "placement-badge",
+                        General: "general-badge"
+                    };
+
+                    badge.classList.add(
+                        badgeClasses[category] || "general-badge"
+                    );
+
+                    badge.textContent = category;
+
+                    const title = document.createElement("h3");
+                    title.textContent = notice.title || "Untitled Notice";
+
+                    const date = document.createElement("div");
+                    date.className = "notice-date";
+                    date.textContent =
+                        "Date: " + (notice.date || "Not specified");
+
+                    const description = document.createElement("p");
+                    description.className = "notice-description";
+                    description.textContent =
+                        notice.description || "No description provided.";
+
+                    content.append(badge, title, date, description);
+
+                    /*
+                     * AUTHOR NAME
+                     */
+                    if (notice.author_name || notice.name) {
+                        const author = document.createElement("div");
+                        author.className = "notice-author";
+                        author.textContent =
+                            "Posted by: " +
+                            (notice.author_name || notice.name);
+
+                        content.appendChild(author);
+                    }
+
+                    /*
+                     * READ MORE BUTTON
+                     */
+                    const readMoreButton = document.createElement("button");
+                    readMoreButton.type = "button";
+                    readMoreButton.className = "read-more";
+                    readMoreButton.textContent = "Read More";
+
+                    readMoreButton.addEventListener("click", function () {
+                        const expanded = card.classList.toggle("expanded");
+
+                        readMoreButton.textContent =
+                            expanded ? "Show Less" : "Read More";
+                    });
+
+                    card.append(content, readMoreButton);
+                    container.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error("Error loading Home page notices:", error);
+
+                container.replaceChildren();
+
+                const errorMessage = document.createElement("div");
+                errorMessage.className = "empty-notices";
+                errorMessage.textContent =
+                    "Unable to connect to the server. Please make sure app.py is running.";
+
+                container.appendChild(errorMessage);
+            }
+        }
+
+        /*
+         * CALENDAR
+         */
+        const calendarGrid = document.getElementById("calendarGrid");
+        const calendarMonth = document.getElementById("calendarMonth");
+        const previousMonth = document.getElementById("previousMonth");
+        const nextMonth = document.getElementById("nextMonth");
+
+        const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+        let displayedDate = new Date();
+        let selectedDate = new Date();
+
+        function renderCalendar() {
+            calendarGrid.replaceChildren();
+
+            const year = displayedDate.getFullYear();
+            const month = displayedDate.getMonth();
+
+            calendarMonth.textContent =
+                displayedDate.toLocaleDateString("en-US", {
+                    month: "long",
+                    year: "numeric"
+                });
+
+            weekdays.forEach(function (weekday) {
+                const dayName = document.createElement("div");
+                dayName.className = "weekday";
+                dayName.textContent = weekday;
+                calendarGrid.appendChild(dayName);
+            });
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyDay = document.createElement("div");
+                emptyDay.className = "day empty";
+                calendarGrid.appendChild(emptyDay);
+            }
+
+            for (let dayNumber = 1; dayNumber <= daysInMonth; dayNumber++) {
+                const dayElement = document.createElement("div");
+                dayElement.className = "day";
+                dayElement.textContent = dayNumber;
+
+                const isSelected =
+                    dayNumber === selectedDate.getDate() &&
+                    month === selectedDate.getMonth() &&
+                    year === selectedDate.getFullYear();
+
+                if (isSelected) {
+                    dayElement.classList.add("selected");
+                }
+
+                dayElement.addEventListener("click", function () {
+                    selectedDate = new Date(year, month, dayNumber);
+                    renderCalendar();
+                });
+
+                calendarGrid.appendChild(dayElement);
+            }
+        }
+
+        previousMonth.addEventListener("click", function () {
+            displayedDate.setMonth(displayedDate.getMonth() - 1);
+            renderCalendar();
+        });
+
+        nextMonth.addEventListener("click", function () {
+            displayedDate.setMonth(displayedDate.getMonth() + 1);
+            renderCalendar();
+        });
+
+        /*
+         * START THE PAGE
+         */
+        loadUser();
+        loadNotices();
+        renderCalendar();
+
+    });
+    </script>
+
+</body>
+</html>
+```

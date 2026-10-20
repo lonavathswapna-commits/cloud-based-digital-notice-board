@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Login - Digital Notice Board</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            min-height: 100vh;
+            color: #17365d;
+            background: linear-gradient(135deg, #f3f8ff, #ffffff, #edf5ff);
+        }
+
+        .topbar {
+            height: 65px;
+            display: flex;
+            align-items: center;
+            padding: 0 30px;
+            background: linear-gradient(110deg, #0874e8, #0861d5);
+            color: white;
+        }
+
+        .brand {
+            font-size: 21px;
+            font-weight: bold;
+        }
+
+        .login-container {
+            min-height: calc(100vh - 65px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 440px;
+            padding: 35px;
+            background: white;
+            border: 1px solid #dce8f5;
+            border-radius: 12px;
+            box-shadow: 0 10px 35px rgba(27, 83, 145, 0.10);
+        }
+
+        .logo-circle {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: #0869df;
+            color: white;
+            font-size: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 27px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #69809e;
+            font-size: 13px;
+            line-height: 1.6;
+            margin-bottom: 29px;
+        }
+
+        .form-group {
+            margin-bottom: 19px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .input-box {
+            height: 46px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 12px;
+            border: 1px solid #d7e4f2;
+            border-radius: 6px;
+        }
+
+        .input-box:focus-within {
+            border-color: #1976ed;
+            box-shadow: 0 0 0 3px rgba(25, 118, 237, 0.10);
+        }
+
+        .input-box input {
+            width: 100%;
+            min-width: 0;
+            height: 100%;
+            border: none;
+            outline: none;
+            font-size: 13px;
+            color: #17365d;
+            background: transparent;
+        }
+
+        .toggle-password {
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            color: #64809e;
+        }
+
+        .login-button {
+            width: 100%;
+            height: 46px;
+            border: none;
+            border-radius: 6px;
+            background: linear-gradient(110deg, #0878ef, #0860d6);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login-button:hover {
+            opacity: 0.9;
+        }
+
+        .message {
+            margin-top: 13px;
+            font-size: 13px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .register-text {
+            text-align: center;
+            color: #6a7f99;
+            font-size: 13px;
+            margin-top: 23px;
+        }
+
+        .register-text a {
+            color: #0869df;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .footer-text {
+            margin-top: 24px;
+            text-align: center;
+            color: #8092a8;
+            font-size: 11px;
+        }
+
+        @media (max-width: 500px) {
+            .login-card {
+                padding: 28px 20px;
+            }
+
+            .brand {
+                font-size: 17px;
+            }
+
+            h1 {
+                font-size: 23px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-container">
+
+        <section class="login-card">
+
+            <div class="logo-circle">👤</div>
+
+            <h1>Welcome Back!</h1>
+
+            <p class="subtitle">
+                Login to access your Digital Notice Board
+            </p>
+
+            <form id="loginForm">
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+
+                    <div class="input-box">
+                        <span>✉</span>
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Enter your email address"
+                            autocomplete="username"
+                            required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+
+                    <div class="input-box">
+                        <span>🔒</span>
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Enter your password"
+                            autocomplete="current-password"
+                            required>
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            id="togglePassword">
+                            Show
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" class="login-button">
+                    Login →
+                </button>
+
+                <p id="message" class="message" aria-live="polite"></p>
+
+            </form>
+
+            <div class="register-text">
+                Don't have an account?
+                <a href="register.html">Create your account</a>
+            </div>
+
+        </section>
+
+        <p class="footer-text">
+            © 2026 Cloud-Based Digital Notice Board. All rights reserved.
+        </p>
+
+    </main>
+
+   <script>
+    const loginForm = document.getElementById("loginForm");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const message = document.getElementById("message");
+    const togglePassword = document.getElementById("togglePassword");
+
+    // Show or hide password
+    togglePassword.addEventListener("click", function () {
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            togglePassword.textContent = "Hide";
+        } else {
+            passwordInput.type = "password";
+            togglePassword.textContent = "Show";
+        }
+    });
+
+    // Login using the Flask backend
+    loginForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        const email = emailInput.value.trim().toLowerCase();
+        const password = passwordInput.value;
+
+        message.textContent = "";
+        message.style.color = "red";
+
+        try {
+            const response = await fetch("/api/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    email: email,
+                    password: password
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                message.textContent = result.message ||
+                    "Login failed. Please try again.";
+                return;
+            }
+
+            message.textContent = "Login successful! Redirecting...";
+            message.style.color = "green";
+            message.style.fontWeight = "bold";
+
+            setTimeout(function () {
+                window.location.href = result.redirect;
+            }, 500);
+
+        } catch (error) {
+            message.textContent =
+                "Unable to connect to the server. Please try again.";
+        }
+    });
+</script>
+
+</body>
+</html>

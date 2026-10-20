@@ -1,0 +1,917 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Notices - Digital Notice Board</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #17365d;
+            font-size: 12px;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+        }
+
+        /* TOP HEADER */
+        .topbar {
+            height: 47px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px 0 21px;
+            color: #ffffff;
+            background: linear-gradient(110deg, #0874e8, #0861d5);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12);
+        }
+
+        .brand {
+            font-size: 17px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .user-info {
+            font-size: 10px;
+            white-space: nowrap;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            position: fixed;
+            top: 47px;
+            left: 0;
+            bottom: 0;
+            width: 153px;
+            padding-top: 8px;
+            background: linear-gradient(180deg, #142c43, #102840);
+            overflow-y: auto;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .nav-item {
+            height: 37px;
+            margin: 0 3px;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            color: #ffffff;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 500;
+            transition: background 0.2s ease;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(110deg, #0878ef, #0860d6);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+            font-weight: bold;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            margin-left: 153px;
+            padding: 61px 13px 24px 14px;
+            min-height: 100vh;
+            background: #ffffff;
+        }
+
+        /* PAGE BANNER */
+        .page-banner {
+            min-height: 75px;
+            display: flex;
+            align-items: center;
+            padding: 12px 17px;
+            margin-bottom: 11px;
+            background: linear-gradient(110deg, #e8f3ff, #f0f7ff);
+            border: 1px solid #d5e5f5;
+            border-radius: 6px;
+        }
+
+        .banner-text h1 {
+            color: #17365d;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .banner-text p {
+            color: #48688e;
+            font-size: 11px;
+        }
+
+        /* NOTICES HEADING */
+        .notices-heading {
+            min-height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .notices-heading h2 {
+            font-size: 17px;
+            color: #17365d;
+            font-weight: 700;
+        }
+
+        .add-button {
+            min-height: 28px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 11px;
+            color: #ffffff;
+            background: linear-gradient(110deg, #0878ef, #0860d6);
+            border-radius: 5px;
+            font-size: 10px;
+            font-weight: 600;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(0, 80, 180, 0.12);
+        }
+
+        .add-button:hover {
+            background: #075bc7;
+        }
+
+        /* NOTICE CARDS */
+        .notice-card {
+            width: 100%;
+            min-height: 92px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 13px 10px 11px;
+            margin-bottom: 10px;
+            background: linear-gradient(110deg, #f0f7ff, #f5faff);
+            border: 1px solid #dfebf7;
+            border-radius: 6px;
+        }
+
+        .notice-content {
+            flex: 1;
+            min-width: 0;
+            padding-top: 1px;
+        }
+
+        .title-line {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-bottom: 8px;
+        }
+
+        .title-line h3 {
+            color: #17365d;
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 3px 9px;
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 9px;
+            font-weight: 700;
+            line-height: 1.1;
+            white-space: nowrap;
+        }
+
+        .academic-badge {
+            background: linear-gradient(110deg, #8064f4, #7254e8);
+        }
+
+        .event-badge {
+            background: linear-gradient(110deg, #2aa16c, #198451);
+        }
+
+        .important-badge {
+            background: linear-gradient(110deg, #fa7479, #e84b51);
+        }
+
+        .placement-badge {
+            background: linear-gradient(110deg, #a078f4, #8656e8);
+        }
+
+        .general-badge {
+            background: linear-gradient(110deg, #64748b, #475569);
+        }
+
+        .notice-content p {
+            color: #526f93;
+            font-size: 10px;
+            line-height: 1.55;
+            overflow-wrap: anywhere;
+            white-space: pre-wrap;
+        }
+
+        .notice-date {
+            margin-top: 9px;
+            color: #59779a;
+            font-size: 10px;
+        }
+
+        /* EDIT AND DELETE BUTTONS */
+        .notice-actions {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            flex-shrink: 0;
+            padding-top: 19px;
+        }
+
+        .notice-actions button {
+            min-height: 26px;
+            padding: 0 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            border-radius: 5px;
+            color: #ffffff;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .notice-actions button:hover {
+            opacity: 0.85;
+        }
+
+        .notice-actions button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .edit-button {
+            background: linear-gradient(110deg, #0878ef, #0860d6);
+        }
+
+        .delete-button {
+            background: linear-gradient(110deg, #ff626a, #ee4650);
+        }
+
+        /* EMPTY MESSAGE */
+        .empty-message {
+            padding: 25px 15px;
+            margin-top: 10px;
+            color: #526f93;
+            text-align: center;
+            font-size: 12px;
+            line-height: 1.7;
+            background: #f5faff;
+            border: 1px solid #dfebf7;
+            border-radius: 6px;
+        }
+
+        /* STATUS MESSAGE */
+        .status-message {
+            margin-bottom: 12px;
+            padding: 10px;
+            border-radius: 5px;
+            display: none;
+            font-size: 12px;
+        }
+
+        .status-success {
+            display: block;
+            color: #166534;
+            background: #dcfce7;
+            border: 1px solid #bbf7d0;
+        }
+
+        .status-error {
+            display: block;
+            color: #991b1b;
+            background: #fee2e2;
+            border: 1px solid #fecaca;
+        }
+
+        /* EDIT FORM */
+        .edit-form {
+            display: none;
+            margin-top: 12px;
+            padding: 14px;
+            background: #ffffff;
+            border: 1px solid #d5e5f5;
+            border-radius: 6px;
+        }
+
+        .edit-form.open {
+            display: block;
+        }
+
+        .edit-form label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #17365d;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .edit-form input,
+        .edit-form select,
+        .edit-form textarea {
+            width: 100%;
+            padding: 9px;
+            border: 1px solid #cbd8e6;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 12px;
+            color: #17365d;
+        }
+
+        .edit-form textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .edit-form input:focus,
+        .edit-form select:focus,
+        .edit-form textarea:focus {
+            outline: 2px solid #bfdbfe;
+            border-color: #0878ef;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 13px;
+        }
+
+        .form-actions button {
+            padding: 8px 14px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 11px;
+            font-weight: bold;
+        }
+
+        .save-button {
+            background: #0878ef;
+        }
+
+        .cancel-button {
+            background: #64748b;
+        }
+
+        /* RESPONSIVE DESIGN */
+        @media (max-width: 700px) {
+            .brand {
+                font-size: 13px;
+            }
+
+            .sidebar {
+                width: 120px;
+            }
+
+            .nav-item {
+                padding: 0 10px;
+                font-size: 11px;
+            }
+
+            .main-content {
+                margin-left: 120px;
+                padding: 60px 9px 20px;
+            }
+
+            .page-banner {
+                padding: 10px;
+            }
+
+            .banner-text h1 {
+                font-size: 15px;
+            }
+
+            .banner-text p {
+                font-size: 10px;
+            }
+
+            .notice-card {
+                flex-wrap: wrap;
+                gap: 9px;
+                padding: 12px 9px;
+            }
+
+            .notice-content {
+                flex-basis: 100%;
+            }
+
+            .notice-actions {
+                width: 100%;
+                padding-top: 0;
+                justify-content: flex-start;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .brand {
+                font-size: 10px;
+            }
+
+            .user-info {
+                display: none;
+            }
+
+            .title-line {
+                gap: 5px;
+            }
+
+            .title-line h3 {
+                font-size: 10px;
+            }
+
+            .add-button {
+                padding: 0 7px;
+                font-size: 9px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Top Header -->
+    <header class="topbar">
+        <div class="brand">Digital Notice Board</div>
+        <div class="user-info">
+            <span id="welcomeName">Welcome, Student</span>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <nav>
+            <a href="index.html" class="nav-item">
+                <span>Home</span>
+            </a>
+
+            <a href="my-notices.html" class="nav-item active">
+                <span>My Notices</span>
+            </a>
+
+            <a href="add-notice.html" class="nav-item">
+                <span>Add Notice</span>
+            </a>
+
+            <a href="profile.html" class="nav-item">
+                <span>Profile</span>
+            </a>
+
+            <a href="logout.html" class="nav-item">
+                <span>Logout</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+        <section class="page-banner">
+            <div class="banner-text">
+                <h1>My Notices</h1>
+                <p>View and manage the notices you have posted.</p>
+            </div>
+        </section>
+
+        <div class="notices-heading">
+            <h2>Your Notices</h2>
+
+            <a href="add-notice.html" class="add-button">
+                Add New Notice
+            </a>
+        </div>
+
+        <div
+            id="statusMessage"
+            class="status-message"
+            role="status"
+            aria-live="polite">
+        </div>
+
+        <section id="noticesContainer" aria-live="polite">
+            Loading your notices...
+        </section>
+
+    </main>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            const container = document.getElementById("noticesContainer");
+            const welcomeName = document.getElementById("welcomeName");
+            const statusMessage = document.getElementById("statusMessage");
+
+            // Load the logged-in user's name.
+            try {
+                const userResponse = await fetch("/api/me", {
+                    credentials: "same-origin"
+                });
+
+                const userResult = await userResponse.json();
+
+                if (
+                    userResponse.ok &&
+                    userResult.success &&
+                    userResult.user
+                ) {
+                    welcomeName.textContent =
+                        "Welcome, " + (userResult.user.name || "Student");
+                }
+            } catch (error) {
+                console.error("Unable to load user details:", error);
+            }
+
+            // Display a status message.
+            function showMessage(message, type) {
+                statusMessage.textContent = message;
+                statusMessage.className = "status-message " +
+                    (type === "success" ? "status-success" : "status-error");
+
+                statusMessage.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest"
+                });
+            }
+
+            // Load notices belonging to the logged-in user.
+            async function loadNotices() {
+                try {
+                    container.textContent = "Loading your notices...";
+
+                    const response = await fetch("/api/my-notices", {
+                        method: "GET",
+                        credentials: "same-origin"
+                    });
+
+                    const result = await response.json();
+
+                    if (response.status === 401) {
+                        container.textContent =
+                            "Please log in to view your notices.";
+                        return;
+                    }
+
+                    if (!response.ok || result.success !== true) {
+                        container.textContent =
+                            result.message || "Unable to load your notices.";
+                        return;
+                    }
+
+                    const notices = result.notices || [];
+
+                    container.replaceChildren();
+
+                    if (notices.length === 0) {
+                        const emptyMessage = document.createElement("div");
+                        emptyMessage.className = "empty-message";
+                        emptyMessage.textContent =
+                            "You have not added any notices yet.";
+
+                        container.appendChild(emptyMessage);
+                        return;
+                    }
+
+                    notices.forEach(function (notice) {
+                        const card = document.createElement("article");
+                        card.className = "notice-card";
+
+                        const content = document.createElement("div");
+                        content.className = "notice-content";
+
+                        const titleLine = document.createElement("div");
+                        titleLine.className = "title-line";
+
+                        const title = document.createElement("h3");
+                        title.textContent =
+                            notice.title || "Untitled Notice";
+
+                        const badge = document.createElement("span");
+                        badge.className = "badge";
+
+                        const category = notice.category || "General";
+                        badge.textContent = category;
+
+                        const badgeClasses = {
+                            Academic: "academic-badge",
+                            Event: "event-badge",
+                            Important: "important-badge",
+                            Placement: "placement-badge",
+                            General: "general-badge"
+                        };
+
+                        badge.classList.add(
+                            badgeClasses[category] || "general-badge"
+                        );
+
+                        titleLine.append(title, badge);
+
+                        const description = document.createElement("p");
+                        description.textContent = notice.description || "";
+
+                        const noticeDate = document.createElement("div");
+                        noticeDate.className = "notice-date";
+                        noticeDate.textContent =
+                            "Date: " + (notice.date || "Not specified");
+
+                        content.append(
+                            titleLine,
+                            description,
+                            noticeDate
+                        );
+
+                        // Create the Edit and Delete buttons.
+                        const actions = document.createElement("div");
+                        actions.className = "notice-actions";
+
+                        const editButton = document.createElement("button");
+                        editButton.type = "button";
+                        editButton.textContent = "Edit";
+                        editButton.className = "edit-button";
+
+                        editButton.addEventListener("click", function () {
+                            openEditForm(notice, card, editButton);
+                        });
+
+                        const deleteButton = document.createElement("button");
+                        deleteButton.type = "button";
+                        deleteButton.textContent = "Delete";
+                        deleteButton.className = "delete-button";
+
+                        deleteButton.addEventListener("click", function () {
+                            deleteNotice(notice.id, deleteButton);
+                        });
+
+                        actions.append(editButton, deleteButton);
+
+                        card.append(content, actions);
+                        container.appendChild(card);
+                    });
+
+                } catch (error) {
+                    console.error("Error loading notices:", error);
+                    container.textContent =
+                        "Unable to connect to the server. Please try again.";
+                }
+            }
+
+            // Create an editable form inside a notice card.
+            function openEditForm(notice, card, editButton) {
+                // Prevent opening multiple forms for the same notice.
+                if (card.querySelector(".edit-form")) {
+                    return;
+                }
+
+                const form = document.createElement("form");
+                form.className = "edit-form open";
+
+                const titleLabel = document.createElement("label");
+                titleLabel.textContent = "Notice Title";
+
+                const titleInput = document.createElement("input");
+                titleInput.type = "text";
+                titleInput.required = true;
+                titleInput.maxLength = 200;
+                titleInput.value = notice.title || "";
+
+                titleLabel.appendChild(titleInput);
+
+                const categoryLabel = document.createElement("label");
+                categoryLabel.textContent = "Category";
+
+                const categorySelect = document.createElement("select");
+                categorySelect.required = true;
+
+                [
+                    "Academic",
+                    "Event",
+                    "Important",
+                    "Placement",
+                    "General"
+                ].forEach(function (category) {
+                    const option = document.createElement("option");
+                    option.value = category;
+                    option.textContent = category;
+                    categorySelect.appendChild(option);
+                });
+
+                categorySelect.value = notice.category || "General";
+                categoryLabel.appendChild(categorySelect);
+
+                const descriptionLabel = document.createElement("label");
+                descriptionLabel.textContent = "Description";
+
+                const descriptionInput = document.createElement("textarea");
+                descriptionInput.required = true;
+                descriptionInput.maxLength = 10000;
+                descriptionInput.value = notice.description || "";
+
+                descriptionLabel.appendChild(descriptionInput);
+
+                const dateLabel = document.createElement("label");
+                dateLabel.textContent = "Notice Date";
+
+                const dateInput = document.createElement("input");
+                dateInput.type = "date";
+                dateInput.required = true;
+                dateInput.value = notice.date || "";
+
+                dateLabel.appendChild(dateInput);
+
+                const formActions = document.createElement("div");
+                formActions.className = "form-actions";
+
+                const saveButton = document.createElement("button");
+                saveButton.type = "submit";
+                saveButton.className = "save-button";
+                saveButton.textContent = "Save Changes";
+
+                const cancelButton = document.createElement("button");
+                cancelButton.type = "button";
+                cancelButton.className = "cancel-button";
+                cancelButton.textContent = "Cancel";
+
+                cancelButton.addEventListener("click", function () {
+                    form.remove();
+                    editButton.disabled = false;
+                });
+
+                formActions.append(saveButton, cancelButton);
+
+                form.append(
+                    titleLabel,
+                    categoryLabel,
+                    descriptionLabel,
+                    dateLabel,
+                    formActions
+                );
+
+                card.appendChild(form);
+                editButton.disabled = true;
+
+                form.addEventListener("submit", async function (event) {
+                    event.preventDefault();
+
+                    if (!form.reportValidity()) {
+                        return;
+                    }
+
+                    saveButton.disabled = true;
+                    saveButton.textContent = "Saving...";
+
+                    try {
+                        const response = await fetch(
+                            `/api/notices/${notice.id}`,
+                            {
+                                method: "PUT",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                credentials: "same-origin",
+                                body: JSON.stringify({
+                                    title: titleInput.value.trim(),
+                                    category: categorySelect.value,
+                                    description:
+                                        descriptionInput.value.trim(),
+                                    date: dateInput.value
+                                })
+                            }
+                        );
+
+                        const result = await response.json();
+
+                        if (response.ok && result.success) {
+                            showMessage(
+                                result.message ||
+                                "Notice updated successfully!",
+                                "success"
+                            );
+
+                            await loadNotices();
+                        } else {
+                            showMessage(
+                                result.message ||
+                                "Unable to update the notice.",
+                                "error"
+                            );
+
+                            saveButton.disabled = false;
+                            saveButton.textContent = "Save Changes";
+                        }
+
+                    } catch (error) {
+                        console.error("Edit notice error:", error);
+
+                        showMessage(
+                            "Unable to connect to the server.",
+                            "error"
+                        );
+
+                        saveButton.disabled = false;
+                        saveButton.textContent = "Save Changes";
+                    }
+                });
+            }
+
+            // Delete a notice after confirmation.
+            async function deleteNotice(noticeId, deleteButton) {
+                const confirmed = confirm(
+                    "Are you sure you want to delete this notice? " +
+                    "This action cannot be undone."
+                );
+
+                if (!confirmed) {
+                    return;
+                }
+
+                deleteButton.disabled = true;
+                deleteButton.textContent = "Deleting...";
+
+                try {
+                    const response = await fetch(
+                        `/api/notices/${noticeId}`,
+                        {
+                            method: "DELETE",
+                            credentials: "same-origin"
+                        }
+                    );
+
+                    const result = await response.json();
+
+                    if (response.ok && result.success) {
+                        showMessage(
+                            result.message ||
+                            "Notice deleted successfully!",
+                            "success"
+                        );
+
+                        await loadNotices();
+                    } else {
+                        showMessage(
+                            result.message ||
+                            "Unable to delete the notice.",
+                            "error"
+                        );
+
+                        deleteButton.disabled = false;
+                        deleteButton.textContent = "Delete";
+                    }
+
+                } catch (error) {
+                    console.error("Delete notice error:", error);
+
+                    showMessage(
+                        "Unable to connect to the server.",
+                        "error"
+                    );
+
+                    deleteButton.disabled = false;
+                    deleteButton.textContent = "Delete";
+                }
+            }
+
+            // Display the notices when the page opens.
+            await loadNotices();
+        });
+    </script>
+
+</body>
+</html>
+```
