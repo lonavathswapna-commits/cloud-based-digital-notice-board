@@ -1,0 +1,18 @@
+name: Digital Notice Board Check
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  check-project:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download project code
+        uses: actions/checkout@v4
+
+      - name: Check project files
+        run: |
+          test -f index.html
+          echo "Digital Notice Board files checked"
